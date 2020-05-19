@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 
 @app.route('/api/test')
-def hello():
+def test():
     return json.dumps({'msg': 'Hello World'})
 
 

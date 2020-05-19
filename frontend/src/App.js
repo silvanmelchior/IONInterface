@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from "axios";
 import './App.css';
 
 function App() {
@@ -8,3 +9,5 @@ function App() {
 }
 
 export default App;
+
+axios.get('/api/test').then(response => console.log(response.data));
