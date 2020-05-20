@@ -1,14 +1,14 @@
 import React from 'react';
 import axios from "axios";
-import { Button } from '@material-ui/core';
+import { Button, Container } from '@material-ui/core';
 import './App.css';
 
 function App() {
   return (
-    <React.Fragment>
+    <Container maxWidth="xs">
       <h1>Test</h1>
       <Button variant="contained" color="primary">Hello World</Button>
-    </React.Fragment>
+    </Container>
   );
 }
 
