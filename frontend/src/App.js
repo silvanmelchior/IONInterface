@@ -1,6 +1,11 @@
 import React from 'react';
 import axios from "axios";
-import { AppBar, BottomNavigation, BottomNavigationAction, Button, Container, SvgIcon, Toolbar, Typography} from '@material-ui/core';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import { Container, SvgIcon} from '@material-ui/core';
+import Channel from './Channel';
+import Sub from './Sub';
+import Cue from './Cue';
 import { makeStyles } from '@material-ui/core';
 
 function HomeIcon(props) {  // TODO
@@ -14,12 +19,15 @@ function HomeIcon(props) {  // TODO
 const useStyles = makeStyles({
   BottomNavigation: {
     width: '100%',
-    position: 'sticky',
+    position: 'fixed',
     bottom: 0
+  },
+  Container: {
+    paddingBottom: 66
   }
 });
 
-function App() {
+export default function App() {
   const [page, setPage] = React.useState('channel');
   const classes = useStyles();
 
@@ -32,15 +40,12 @@ function App() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="xs">
-        <h1>Test</h1>
-        <Button variant="contained" color="primary">Hello World</Button>
-        <p>Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla </p>
-        <p>Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla </p>
-        <p>Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla </p>
-        <p>Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla </p>
-        <p>Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla </p>
-        <p>Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla Bla </p>
+      <Container maxWidth="xs" className={classes.Container}>
+        {
+          page === 'channel'  ? <Channel/> :
+          page === 'sub'      ? <Sub/> :
+                                <Cue/>
+        }
       </Container>
       <BottomNavigation
         value={page}
@@ -57,7 +62,5 @@ function App() {
     </>
   );
 }
-
-export default App;
 
 axios.get('/api/test').then(response => console.log(response.data));
