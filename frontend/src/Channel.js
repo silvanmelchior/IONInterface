@@ -1,11 +1,23 @@
 import React from 'react';
-import {Box, Button, Grid, Paper, Slider, Typography} from '@material-ui/core';
+import { Box, Button, Grid, Paper, Slider, Typography } from '@material-ui/core';
 import { ArrowBackIos, ArrowForwardIos, EmojiObjects, EmojiObjectsOutlined, Tune } from '@material-ui/icons';
+import Color from 'color';
 import { styled } from '@material-ui/core/styles';
 
-const WideButton = styled(Button)({
-  width: '100%',
-  height: '60px'
+const WideButton = styled(Button)(args => {
+  let color = 'rgba(255, 255, 255, 0.23)';
+  if(args.color != null) {
+    color = args.theme.palette[args.color].main;
+    color = Color(color).alpha(0.5).string();
+  }
+  return {
+    width: '100%',
+    height: '60px',
+    '&:hover': {
+      borderColor: color,
+      backgroundColor: 'transparent'
+    }
+  }
 });
 
 export default function Channel() {
