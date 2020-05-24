@@ -20,6 +20,25 @@ const WideButton = styled(Button)(args => {
   }
 });
 
+const keylabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'R', '0', 'C'];
+const keypad = [];
+for(let i=0; i<4; i++) {
+  let keys = [];
+  for (let j=0; j<3; j++) {
+    let idx = i*3 + j;
+    keys.push(
+      <Grid item xs={4} key={idx}>
+        <WideButton variant="outlined" size="large">{keylabels[idx]}</WideButton>
+      </Grid>
+    )
+  }
+  keypad.push(
+    <Grid container spacing={1} key={i}>
+      {keys}
+    </Grid>
+  )
+}
+
 export default function Channel() {
 
   const [slider, setSlider] = React.useState(30);
@@ -27,25 +46,6 @@ export default function Channel() {
   const handleSlider = (event, newSlider) => {
     setSlider(newSlider);
   };
-
-  const keylabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'R', '0', 'C'];
-  let keypad = [];
-  for(let i=0; i<4; i++) {
-    let keys = [];
-    for (let j=0; j<3; j++) {
-      let idx = i*3 + j;
-      keys.push(
-        <Grid item xs={4} key={idx}>
-          <WideButton variant="outlined" size="large">{keylabels[idx]}</WideButton>
-        </Grid>
-      )
-    }
-    keypad.push(
-      <Grid container spacing={1} key={i}>
-        {keys}
-      </Grid>
-    )
-  }
 
   return (
     <Box mx={4}>
@@ -56,7 +56,14 @@ export default function Channel() {
           </Typography>
         </Paper>
       </Box>
-      <Slider value={slider} onChange={handleSlider} />
+      <Slider
+        value={slider}
+        onChange={handleSlider}
+        min={0}
+        max={100}
+        step={1}
+        valueLabelDisplay="auto"
+      />
       <Grid container spacing={1}>
         <Grid item xs={6}>
           <WideButton variant="outlined" color="primary" size="large" startIcon={<EmojiObjectsOutlined/>}>Out</WideButton>
