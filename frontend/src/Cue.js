@@ -1,7 +1,18 @@
 import React from 'react';
-import { Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Divider, List, Fab, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  fab: {
+    position: 'fixed',
+    bottom: 56 + theme.spacing(2),
+    right: theme.spacing(2),
+  },
+}));
 
 export default function Cue() {
+  const classes = useStyles();
+
   return (
     <>
       <h1>Cue List 1</h1>
@@ -40,6 +51,10 @@ export default function Cue() {
           <ListItemIcon>50</ListItemIcon>
           <ListItemText primary="&nbsp;" />
         </ListItem>
+
+        <Fab color="primary" className={classes.fab}>
+          GO
+        </Fab>
       </List>
     </>
   );
