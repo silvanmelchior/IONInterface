@@ -55,7 +55,7 @@ export default function App() {
         showLabels
         className={classes.BottomNavigation}
       >
-        <BottomNavigationAction label="Channel" value="channel" icon={<HomeIcon />} />
+        <BottomNavigationAction label="Channel" value="chan" icon={<HomeIcon />} />
         <BottomNavigationAction label="Sub" value="sub" icon={<HomeIcon />} />
         <BottomNavigationAction label="Cue" value="cue" icon={<HomeIcon />} />
       </BottomNavigation>
