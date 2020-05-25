@@ -8,6 +8,9 @@ const useStyles = makeStyles(theme => ({
     position: 'fixed',
     bottom: 56 + theme.spacing(2),
     right: theme.spacing(2),
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main
+    }
   },
 }));
 
