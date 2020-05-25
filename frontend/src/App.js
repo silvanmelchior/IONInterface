@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 });
 
 export default function App() {
-  const [page, setPage] = React.useState('channel');
+  const [page, setPage] = React.useState('chan');
   const classes = useStyles();
 
   return (
@@ -42,9 +42,9 @@ export default function App() {
       </AppBar>
       <Container maxWidth="xs" className={classes.Container}>
         {
-          page === 'channel'  ? <Channel/> :
-          page === 'sub'      ? <Sub/> :
-                                <Cue/>
+          page === 'chan' ? <Channel/> :
+          page === 'sub'  ? <Sub/> :
+                            <Cue/>
         }
       </Container>
       <BottomNavigation
