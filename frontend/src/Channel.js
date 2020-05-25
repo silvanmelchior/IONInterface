@@ -1,6 +1,8 @@
 import React from 'react';
 import { Box, Button, Grid, Paper, Slider, Typography } from '@material-ui/core';
-import { ArrowBackIos, ArrowForwardIos, EmojiObjects, EmojiObjectsOutlined, Tune } from '@material-ui/icons';
+import { ArrowBackIos, ArrowForwardIos, EmojiObjects, EmojiObjectsOutlined } from '@material-ui/icons';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import Color from 'color';
 import { styled } from '@material-ui/core/styles';
 
@@ -25,20 +27,24 @@ const WideButton = styled(Button)(args => {
 
 export default function Channel() {
 
-  const [slider, setSlider] = React.useState(0);
+  const param_names = ['intens', 'red', 'green', 'blue', 'white'];
+  const [slider, setSlider] = React.useState(param_names.map(val => 0));
   const [chan, setChan] = React.useState(1);  // either number or null
   const [chanUsed, setChanUsed] = React.useState(true);
+  const [params, setParams] = React.useState(false);
 
-  const handleSlider = (event, newSlider) => {
-    setSlider(newSlider);
+  const handleSlider = idx => (event, newSlider) => {
+    let vals = [...slider];
+    vals[idx] = newSlider;
+    setSlider(vals);
     setChanUsed(true);
     if(chan != null) {
-      console.log(newSlider);
+      console.log(idx, vals);
     }
   };
 
   const handleOut = event => {
-    setSlider(0);
+    setSlider(param_names.map(val => 0));
     setChanUsed(true);
     if(chan != null) {
       console.log('out');
@@ -46,7 +52,9 @@ export default function Channel() {
   };
 
   const handleFull = event => {
-    setSlider(100);
+    let vals = [...slider];
+    vals[0] = 100;
+    setSlider(vals);
     setChanUsed(true);
     if(chan != null) {
       console.log('full');
@@ -54,21 +62,21 @@ export default function Channel() {
   };
 
   const handlePrev = event => {
-    setSlider(0);
+    setSlider(param_names.map(val => 0));
     if(chan == null) setChan(1);
     else if(chan > 1) setChan(chan-1);
     setChanUsed(true);
   };
 
   const handleNext = event => {
-    setSlider(0);
+    setSlider(param_names.map(val => 0));
     if(chan == null) setChan(1);
     else setChan(chan+1);
     setChanUsed(true);
   };
 
   const handleNum = num => event => {
-    setSlider(0);
+    setSlider(param_names.map(val => 0));
     if(chan == null) {
       if(num !== 0) setChan(num)
     }
@@ -84,7 +92,7 @@ export default function Channel() {
   };
 
   const handleR = event => {
-    setSlider(0);
+    setSlider(param_names.map(val => 0));
     if(chan != null) {
       if(chan < 10) setChan(null);
       else setChan((chan + '').slice(0, -1) * 1)
@@ -93,7 +101,7 @@ export default function Channel() {
   };
 
   const handleC = event => {
-    setSlider(0);
+    setSlider(param_names.map(val => 0));
     setChan(null);
     setChanUsed(false);
   };
@@ -105,14 +113,18 @@ export default function Channel() {
           <Typography variant="h2">{chan == null ? '\u00a0' : chan}</Typography>
         </Paper>
       </Box>
-      <Slider
-        value={slider}
-        onChange={handleSlider}
-        min={0}
-        max={100}
-        step={1}
-        valueLabelDisplay="auto"
-      />
+      {(params ? param_names : param_names.slice(0, 1)).map((name, idx) => (<Box key={idx}>
+        <Box>{params ? name : null}</Box>
+        <Slider
+          key={name}
+          value={slider[idx]}
+          onChange={handleSlider(idx)}
+          min={0}
+          max={100}
+          step={1}
+          valueLabelDisplay="auto"
+        />
+      </Box>))}
       <Grid container spacing={1}>
         <Grid item xs={6}>
           <WideButton variant="outlined" color="primary" size="large" startIcon={<EmojiObjectsOutlined/>} onClick={handleOut}>Out</WideButton>
@@ -175,8 +187,17 @@ export default function Channel() {
           </Grid>
         </Grid>
       </Box>
-      <Box mt={2}>
-        <WideButton variant="outlined" color="primary" size="large" startIcon={<Tune/>}>Parameters</WideButton>
+      <Box mt={4} textAlign="center">
+        <FormControlLabel
+          control={
+            <Switch
+              checked={params}
+              onChange={event => setParams(event.target.checked)}
+              color="primary"
+            />
+          }
+          label="Parameters"
+        />
       </Box>
     </Box>
   );
