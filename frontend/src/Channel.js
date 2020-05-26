@@ -5,6 +5,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Color from 'color';
 import axios from 'axios';
+import { queueCMD, useCmdQueue} from './CmdQueue';
 import { styled } from '@material-ui/core/styles';
 
 const WideButton = styled(Button)(args => {
@@ -26,8 +27,6 @@ const WideButton = styled(Button)(args => {
 
 });
 
-let sliderCmd = null;
-
 export default function Channel() {
 
   const param_names = ['intens', 'red', 'green', 'blue', 'white'];
@@ -35,18 +34,7 @@ export default function Channel() {
   const [chan, setChan] = React.useState(1);  // either number or null
   const [chanUsed, setChanUsed] = React.useState(true);
   const [params, setParams] = React.useState(false);
-
-  React.useEffect(() => {
-    const handle = setInterval(() => {
-      if(sliderCmd != null) {
-        axios.post('/api/chan/' + sliderCmd[0], {param: sliderCmd[1], val: sliderCmd[2]});
-        sliderCmd = null;
-      }
-    }, 200);
-    return () => {
-      clearInterval(handle);
-    };
-  }, []);
+  useCmdQueue(200);
 
   const handleSlider = idx => (event, newSlider) => {
     let vals = [...slider];
@@ -54,7 +42,7 @@ export default function Channel() {
     setSlider(vals);
     setChanUsed(true);
     if(chan != null) {
-      sliderCmd = [chan, param_names[idx], newSlider];
+      queueCMD(() => axios.post('/api/chan/' + chan, {param: param_names[idx], val: newSlider}))
     }
   };
 
