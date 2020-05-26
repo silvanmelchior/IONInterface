@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, CircularProgress, Slider } from "@material-ui/core";
+import { Box, CircularProgress, Slider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { queueCMD, useCmdQueue} from './CmdQueue';
-import axios from "axios";
-import ErrorContext from "./Error";
+import useCmdQueue from './CmdQueue';
+import axios from 'axios';
+import ErrorContext from './Error';
 
 const useStyles = makeStyles({
   sub: {
@@ -31,6 +31,8 @@ export default function Sub() {
   const [subs, setSubs] = React.useState(null);
   const [slider, setSlider] = React.useState(null);
 
+  const queueCMD = useCmdQueue(200);
+
   React.useEffect(() => {
     axios.get('/api/sub').then(response => {
       if(response.data === 'disconnected') throwError();
@@ -40,8 +42,6 @@ export default function Sub() {
       }
     });
   }, [throwError]);
-
-  useCmdQueue(200);
 
   const handleSlider = idx => (event, newSlider) => {
     let vals = [...slider];

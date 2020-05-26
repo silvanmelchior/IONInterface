@@ -5,7 +5,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Color from 'color';
 import axios from 'axios';
-import { queueCMD, useCmdQueue} from './CmdQueue';
+import useCmdQueue from './CmdQueue';
 import ErrorContext from './Error';
 import { styled } from '@material-ui/core/styles';
 
@@ -36,7 +36,7 @@ export default function Channel() {
   const [chan, setChan] = React.useState(1);  // either number or null
   const [chanUsed, setChanUsed] = React.useState(true);
   const [params, setParams] = React.useState(false);
-  useCmdQueue(200);
+  const queueCMD = useCmdQueue(200);
 
   const handleSlider = idx => (event, newSlider) => {
     let vals = [...slider];
