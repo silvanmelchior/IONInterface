@@ -1,15 +1,15 @@
 import React from 'react';
 
-let queue = null;
-
 export default function useCmdQueue(poll_interval) {
+
+  const queueRef = React.useRef(null);
 
   React.useEffect(() => {
 
     const handle = setInterval(() => {
-      if(queue != null) {
-        queue();
-        queue = null;
+      if(queueRef.current != null) {
+        queueRef.current();
+        queueRef.current = null;
       }
     }, poll_interval);
 
@@ -19,5 +19,6 @@ export default function useCmdQueue(poll_interval) {
 
   }, [poll_interval]);
 
-  return fn => queue = fn
+  return fn => queueRef.current = fn
+
 }
