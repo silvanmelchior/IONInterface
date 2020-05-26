@@ -81,7 +81,7 @@ export default function Sub() {
               {sub.nr}
             </Box>
             <Box className={classes.labelname}>
-              {sub.name}
+              {sub.name !== '' ? sub.name : '\u00a0'}
             </Box>
           </Box>
         ))}

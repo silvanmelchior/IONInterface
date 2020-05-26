@@ -64,7 +64,7 @@ export default function Cue() {
             <React.Fragment key={idx}>
               {idx !== 0 && <Divider/>}
               <ListItem button selected={active === cue.nr} onClick={handleFire(idx)}>
-                <ListItemIcon>{cue.nr}</ListItemIcon>
+                <ListItemIcon>{cue.nr} {cue.part !== '0' ? 'P' + cue.part : null}</ListItemIcon>
                 <ListItemText primary={cue.name !== '' ? cue.name : '\u00a0'}/>
               </ListItem>
             </React.Fragment>

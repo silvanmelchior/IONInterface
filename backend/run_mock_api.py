@@ -1,9 +1,9 @@
 import json
 import time
 from flask import Flask, request
+from config import API_ENDPOINT
 
 
-API_ENDPOINT = '/api'
 REQUEST_DELAY = 1
 MOCK_DISCONNECT = False
 app = Flask(__name__)
@@ -45,13 +45,15 @@ def cue_get():
         return 'disconnected'
     time.sleep(REQUEST_DELAY)
     return json.dumps({'cues': [
-        {'nr': '10', 'name': ''},
-        {'nr': '11', 'name': 'Einlass'},
-        {'nr': '11.1', 'name': 'Black'},
-        {'nr': '11.5', 'name': ''},
-        {'nr': '30', 'name': ''},
-        {'nr': '40', 'name': ''},
-        {'nr': '50', 'name': ''}
+        {'nr': '10', 'part': 0, 'name': ''},
+        {'nr': '11', 'part': 0, 'name': 'Einlass'},
+        {'nr': '11.1', 'part': 0, 'name': 'Black'},
+        {'nr': '11.5', 'part': 0, 'name': ''},
+        {'nr': '30', 'part': 0, 'name': ''},
+        {'nr': '40', 'part': 0, 'name': ''},
+        {'nr': '40', 'part': 1, 'name': ''},
+        {'nr': '40', 'part': 2, 'name': ''},
+        {'nr': '50', 'part': 0, 'name': ''}
     ], 'active': '11.1'})
 
 
