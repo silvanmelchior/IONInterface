@@ -4,6 +4,7 @@ import { ArrowBackIos, ArrowForwardIos, EmojiObjects, EmojiObjectsOutlined } fro
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Color from 'color';
+import axios from 'axios';
 import { styled } from '@material-ui/core/styles';
 
 const WideButton = styled(Button)(args => {
@@ -25,6 +26,8 @@ const WideButton = styled(Button)(args => {
 
 });
 
+let sliderCmd = null;
+
 export default function Channel() {
 
   const param_names = ['intens', 'red', 'green', 'blue', 'white'];
@@ -33,13 +36,25 @@ export default function Channel() {
   const [chanUsed, setChanUsed] = React.useState(true);
   const [params, setParams] = React.useState(false);
 
+  React.useEffect(() => {
+    const handle = setInterval(() => {
+      if(sliderCmd != null) {
+        axios.post('/api/chan/' + sliderCmd[0], {param: sliderCmd[1], val: sliderCmd[2]});
+        sliderCmd = null;
+      }
+    }, 200);
+    return () => {
+      clearInterval(handle);
+    };
+  }, []);
+
   const handleSlider = idx => (event, newSlider) => {
     let vals = [...slider];
     vals[idx] = newSlider;
     setSlider(vals);
     setChanUsed(true);
     if(chan != null) {
-      console.log(idx, vals);
+      sliderCmd = [chan, param_names[idx], newSlider];
     }
   };
 
@@ -47,7 +62,7 @@ export default function Channel() {
     setSlider(param_names.map(val => 0));
     setChanUsed(true);
     if(chan != null) {
-      console.log('out');
+      axios.post('/api/chan/' + chan, {param: 'intens', val: 0});
     }
   };
 
@@ -57,7 +72,7 @@ export default function Channel() {
     setSlider(vals);
     setChanUsed(true);
     if(chan != null) {
-      console.log('full');
+      axios.post('/api/chan/' + chan, {param: 'intens', val: 100});
     }
   };
 
