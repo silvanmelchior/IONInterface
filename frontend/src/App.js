@@ -63,4 +63,10 @@ export default function App() {
   );
 }
 
-axios.get('/api/test').then(response => console.log(response.data));
+axios.post('/api/chan/4', {param: 'intens', val: 100}).then(response => console.log(response.data));
+axios.get('/api/sub').then(response => console.log(response.data));
+axios.post('/api/sub/2', {val: 40}).then(response => console.log(response.data));
+axios.get('/api/cue').then(response => console.log(response.data));
+axios.post('/api/cue/fire', {nr: '10.1'}).then(response => console.log(response.data));
+axios.post('/api/cue/go').then(response => console.log(response.data));
+
