@@ -8,6 +8,7 @@ import axios from 'axios';
 import useCmdQueue from './CmdQueue';
 import ErrorContext from './Error';
 import { styled } from '@material-ui/core/styles';
+import { PARAM_NAMES, POLL_INTERVAL_CHANNEL } from './config';
 
 const WideButton = styled(Button)(args => {
 
@@ -30,13 +31,12 @@ const WideButton = styled(Button)(args => {
 
 export default function Channel() {
 
-  const param_names = ['intens', 'red', 'green', 'blue', 'white'];
   const throwError = React.useContext(ErrorContext);
-  const [slider, setSlider] = React.useState(param_names.map(val => 0));
+  const [slider, setSlider] = React.useState(PARAM_NAMES.map(val => 0));
   const [chan, setChan] = React.useState(1);  // either number or null
   const [chanUsed, setChanUsed] = React.useState(true);
   const [params, setParams] = React.useState(false);
-  const queueCMD = useCmdQueue(200);
+  const queueCMD = useCmdQueue(POLL_INTERVAL_CHANNEL);
 
   const handleSlider = idx => (event, newSlider) => {
     let vals = [...slider];
@@ -45,14 +45,14 @@ export default function Channel() {
     setChanUsed(true);
     if(chan != null) {
       queueCMD(() => {
-        axios.post('/api/chan/' + chan, {param: param_names[idx], val: newSlider})
+        axios.post('/api/chan/' + chan, {param: PARAM_NAMES[idx], val: newSlider})
           .then(response => {if(response.data === 'disconnected') throwError()});
       });
     }
   };
 
   const handleOut = event => {
-    setSlider(param_names.map(val => 0));
+    setSlider(PARAM_NAMES.map(val => 0));
     setChanUsed(true);
     if(chan != null) {
       axios.post('/api/chan/' + chan, {param: 'intens', val: 0})
@@ -72,21 +72,21 @@ export default function Channel() {
   };
 
   const handlePrev = event => {
-    setSlider(param_names.map(val => 0));
+    setSlider(PARAM_NAMES.map(val => 0));
     if(chan == null) setChan(1);
     else if(chan > 1) setChan(chan-1);
     setChanUsed(true);
   };
 
   const handleNext = event => {
-    setSlider(param_names.map(val => 0));
+    setSlider(PARAM_NAMES.map(val => 0));
     if(chan == null) setChan(1);
     else setChan(chan+1);
     setChanUsed(true);
   };
 
   const handleNum = num => event => {
-    setSlider(param_names.map(val => 0));
+    setSlider(PARAM_NAMES.map(val => 0));
     if(chan == null) {
       if(num !== 0) setChan(num)
     }
@@ -102,7 +102,7 @@ export default function Channel() {
   };
 
   const handleR = event => {
-    setSlider(param_names.map(val => 0));
+    setSlider(PARAM_NAMES.map(val => 0));
     if(chan != null) {
       if(chan < 10) setChan(null);
       else setChan((chan + '').slice(0, -1) * 1)
@@ -111,7 +111,7 @@ export default function Channel() {
   };
 
   const handleC = event => {
-    setSlider(param_names.map(val => 0));
+    setSlider(PARAM_NAMES.map(val => 0));
     setChan(null);
     setChanUsed(false);
   };
@@ -123,7 +123,7 @@ export default function Channel() {
           <Typography variant="h2">{chan == null ? '\u00a0' : chan}</Typography>
         </Paper>
       </Box>
-      {(params ? param_names : param_names.slice(0, 1)).map((name, idx) => (<Box key={idx}>
+      {(params ? PARAM_NAMES : PARAM_NAMES.slice(0, 1)).map((name, idx) => (<Box key={idx}>
         <Box>{params ? name : null}</Box>
         <Slider
           key={name}

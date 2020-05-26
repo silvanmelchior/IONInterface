@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import useCmdQueue from './CmdQueue';
 import axios from 'axios';
 import ErrorContext from './Error';
+import { POLL_INTERVAL_SUB } from './config';
 
 const useStyles = makeStyles({
   sub: {
@@ -31,7 +32,7 @@ export default function Sub() {
   const [subs, setSubs] = React.useState(null);
   const [slider, setSlider] = React.useState(null);
 
-  const queueCMD = useCmdQueue(200);
+  const queueCMD = useCmdQueue(POLL_INTERVAL_SUB);
 
   React.useEffect(() => {
     axios.get('/api/sub').then(response => {
