@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from "axios";
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import { Container, SvgIcon} from '@material-ui/core';
@@ -62,8 +61,3 @@ export default function App() {
     </>
   );
 }
-
-axios.get('/api/cue').then(response => console.log(response.data));
-axios.post('/api/cue/fire', {nr: '10.1'}).then(response => console.log(response.data));
-axios.post('/api/cue/go').then(response => console.log(response.data));
-

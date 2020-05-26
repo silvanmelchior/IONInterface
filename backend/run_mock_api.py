@@ -48,9 +48,10 @@ def cue_get():
 
 @app.route(API_ENDPOINT + '/cue/fire', methods=['POST'])
 def cue_fire():
+    time.sleep(REQUEST_DELAY)
     data = json.loads(request.data.decode('utf-8'))
     print('cue fire', data['nr'])
-    return 'ok'
+    return json.dumps({'active': data['nr']})
 
 
 @app.route(API_ENDPOINT + '/cue/go', methods=['POST'])

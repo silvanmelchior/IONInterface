@@ -1,7 +1,8 @@
 import React from 'react';
-import { Divider, List, Fab, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {Divider, List, Fab, ListItem, ListItemIcon, ListItemText, Box, CircularProgress} from '@material-ui/core';
 import { PlayArrow } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from "axios";
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -15,51 +16,57 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Cue() {
+
   const classes = useStyles();
 
-  return (
-    <>
-      <h1>Cue List 1</h1>
-      <List component="nav">
-        <ListItem button selected={false} onClick={event => console.log(event)}>
-          <ListItemIcon>10</ListItemIcon>
-          <ListItemText primary="&nbsp;" />
-        </ListItem>
-        <Divider />
-        <ListItem button selected={false} onClick={event => console.log(event)}>
-          <ListItemIcon>11</ListItemIcon>
-          <ListItemText primary="Einlass" />
-        </ListItem>
-        <Divider />
-        <ListItem button selected={false} onClick={event => console.log(event)}>
-          <ListItemIcon>11.1</ListItemIcon>
-          <ListItemText primary="Black" />
-        </ListItem>
-        <Divider />
-        <ListItem button selected={false} onClick={event => console.log(event)}>
-          <ListItemIcon>15</ListItemIcon>
-          <ListItemText primary="&nbsp;" />
-        </ListItem>
-        <Divider />
-        <ListItem button selected={false} onClick={event => console.log(event)}>
-          <ListItemIcon>30</ListItemIcon>
-          <ListItemText primary="&nbsp;" />
-        </ListItem>
-        <Divider />
-        <ListItem button selected={true} onClick={event => console.log(event)}>
-          <ListItemIcon>40</ListItemIcon>
-          <ListItemText primary="&nbsp;" />
-        </ListItem>
-        <Divider />
-        <ListItem button selected={false} onClick={event => console.log(event)}>
-          <ListItemIcon>50</ListItemIcon>
-          <ListItemText primary="&nbsp;" />
-        </ListItem>
+  const [cues, setCues] = React.useState(null);
+  const [active, setActive] = React.useState(null);
 
-        <Fab color="primary" className={classes.fab}>
-          <PlayArrow />
-        </Fab>
-      </List>
-    </>
-  );
+  React.useEffect(() => {
+    axios.get('/api/cue').then(response => {
+      setActive(response.data.active);
+      setCues(response.data.cues);
+    });
+  }, []);
+
+  const handleFire = idx => () => {
+    axios.post('/api/cue/fire', {nr: cues[idx].nr}).then(response => {
+      setActive(response.data.active);
+    });
+  };
+
+  const handleGo = () => {
+    axios.post('/api/cue/go').then(response => {
+      setActive(response.data.active);
+    });
+  };
+
+  if(cues == null) {
+    return (
+      <Box mt={10} textAlign="center">
+        <CircularProgress />
+      </Box>
+    );
+  }
+  else {
+    return (
+      <>
+        <h1>Cue List 1</h1>
+        <List component="nav">
+          {cues.map((cue, idx) => (
+            <React.Fragment key={idx}>
+              {idx !== 0 && <Divider/>}
+              <ListItem button selected={active === cue.nr} onClick={handleFire(idx)}>
+                <ListItemIcon>{cue.nr}</ListItemIcon>
+                <ListItemText primary={cue.name !== '' ? cue.name : '\u00a0'}/>
+              </ListItem>
+            </React.Fragment>
+          ))}
+          <Fab color="primary" className={classes.fab} onClick={handleGo}>
+            <PlayArrow/>
+          </Fab>
+        </List>
+      </>
+    );
+  }
 }
