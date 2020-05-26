@@ -6,6 +6,7 @@ import Switch from '@material-ui/core/Switch';
 import Color from 'color';
 import axios from 'axios';
 import { queueCMD, useCmdQueue} from './CmdQueue';
+import ErrorContext from './Error';
 import { styled } from '@material-ui/core/styles';
 
 const WideButton = styled(Button)(args => {
@@ -30,6 +31,7 @@ const WideButton = styled(Button)(args => {
 export default function Channel() {
 
   const param_names = ['intens', 'red', 'green', 'blue', 'white'];
+  const throwError = React.useContext(ErrorContext);
   const [slider, setSlider] = React.useState(param_names.map(val => 0));
   const [chan, setChan] = React.useState(1);  // either number or null
   const [chanUsed, setChanUsed] = React.useState(true);
@@ -42,7 +44,10 @@ export default function Channel() {
     setSlider(vals);
     setChanUsed(true);
     if(chan != null) {
-      queueCMD(() => axios.post('/api/chan/' + chan, {param: param_names[idx], val: newSlider}))
+      queueCMD(() => {
+        axios.post('/api/chan/' + chan, {param: param_names[idx], val: newSlider})
+          .then(response => {if(response.data === 'disconnected') throwError()});
+      });
     }
   };
 
@@ -50,7 +55,8 @@ export default function Channel() {
     setSlider(param_names.map(val => 0));
     setChanUsed(true);
     if(chan != null) {
-      axios.post('/api/chan/' + chan, {param: 'intens', val: 0});
+      axios.post('/api/chan/' + chan, {param: 'intens', val: 0})
+        .then(response => {if(response.data === 'disconnected') throwError()});
     }
   };
 
@@ -60,7 +66,8 @@ export default function Channel() {
     setSlider(vals);
     setChanUsed(true);
     if(chan != null) {
-      axios.post('/api/chan/' + chan, {param: 'intens', val: 100});
+      axios.post('/api/chan/' + chan, {param: 'intens', val: 100})
+        .then(response => {if(response.data === 'disconnected') throwError()});
     }
   };
 

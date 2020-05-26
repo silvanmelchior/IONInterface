@@ -3,6 +3,7 @@ import { Box, CircularProgress, Slider } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import { queueCMD, useCmdQueue} from './CmdQueue';
 import axios from "axios";
+import ErrorContext from "./Error";
 
 const useStyles = makeStyles({
   sub: {
@@ -25,16 +26,20 @@ const useStyles = makeStyles({
 export default function Sub() {
 
   const classes = useStyles();
+  const throwError = React.useContext(ErrorContext);
 
   const [subs, setSubs] = React.useState(null);
   const [slider, setSlider] = React.useState(null);
 
   React.useEffect(() => {
     axios.get('/api/sub').then(response => {
-      setSlider(response.data.map(val => 0));
-      setSubs(response.data);
+      if(response.data === 'disconnected') throwError();
+      else {
+        setSlider(response.data.map(val => 0));
+        setSubs(response.data);
+      }
     });
-  }, []);
+  }, [throwError]);
 
   useCmdQueue(200);
 
@@ -42,7 +47,10 @@ export default function Sub() {
     let vals = [...slider];
     vals[idx] = newSlider;
     setSlider(vals);
-    queueCMD(() => axios.post('/api/sub/' + subs[idx].nr, {val: newSlider}))
+    queueCMD(() => {
+      axios.post('/api/sub/' + subs[idx].nr, {val: newSlider})
+        .then(response => {if(response.data === 'disconnected') throwError()});
+    })
   };
 
   if(subs == null) {

@@ -1,21 +1,14 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
-import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-import { Container, SvgIcon} from '@material-ui/core';
+import { AppBar, Snackbar, Toolbar, Typography } from '@material-ui/core';
+import { BottomNavigation, BottomNavigationAction, Container } from '@material-ui/core';
+import { FiberManualRecord, GroupWork, PlayArrow } from '@material-ui/icons';
 import Channel from './Channel';
 import Sub from './Sub';
 import Cue from './Cue';
+import ErrorContext from './Error';
 import { makeStyles } from '@material-ui/core';
 
-function HomeIcon(props) {  // TODO
-  return (
-    <SvgIcon {...props}>
-      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-    </SvgIcon>
-  );
-}
-
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   BottomNavigation: {
     width: '100%',
     position: 'fixed',
@@ -23,11 +16,19 @@ const useStyles = makeStyles({
   },
   Container: {
     paddingBottom: 66
+  },
+  Alert: {
+    '& div': {
+      backgroundColor: theme.palette.error.main,
+      color: 'white'
+    }
   }
-});
+}));
 
 export default function App() {
+
   const [page, setPage] = React.useState('chan');
+  const [error, setError] = React.useState(false);
   const classes = useStyles();
 
   return (
@@ -39,13 +40,15 @@ export default function App() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="xs" className={classes.Container}>
-        {
-          page === 'chan' ? <Channel/> :
-          page === 'sub'  ? <Sub/> :
-                            <Cue/>
-        }
-      </Container>
+      <ErrorContext.Provider value={() => setError(true)}>
+        <Container maxWidth="xs" className={classes.Container}>
+          {
+            page === 'chan' ? <Channel/> :
+            page === 'sub'  ? <Sub/> :
+                              <Cue/>
+          }
+        </Container>
+      </ErrorContext.Provider>
       <BottomNavigation
         value={page}
         onChange={(event, newPage) => {
@@ -54,10 +57,18 @@ export default function App() {
         showLabels
         className={classes.BottomNavigation}
       >
-        <BottomNavigationAction label="Channel" value="chan" icon={<HomeIcon />} />
-        <BottomNavigationAction label="Sub" value="sub" icon={<HomeIcon />} />
-        <BottomNavigationAction label="Cue" value="cue" icon={<HomeIcon />} />
+        <BottomNavigationAction label="Channel" value="chan" icon={<FiberManualRecord />} />
+        <BottomNavigationAction label="Sub" value="sub" icon={<GroupWork />} />
+        <BottomNavigationAction label="Cue" value="cue" icon={<PlayArrow />} />
       </BottomNavigation>
+      <Snackbar
+        open={error}
+        autoHideDuration={6000}
+        onClose={() => setError(false)}
+        message="ERROR: Could not connect to ION"
+        className={classes.Alert}
+      />
     </>
   );
+
 }

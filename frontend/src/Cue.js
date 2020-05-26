@@ -3,6 +3,7 @@ import {Divider, List, Fab, ListItem, ListItemIcon, ListItemText, Box, CircularP
 import { PlayArrow } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from "axios";
+import ErrorContext from './Error';
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -18,26 +19,32 @@ const useStyles = makeStyles(theme => ({
 export default function Cue() {
 
   const classes = useStyles();
+  const throwError = React.useContext(ErrorContext);
 
   const [cues, setCues] = React.useState(null);
   const [active, setActive] = React.useState(null);
 
   React.useEffect(() => {
     axios.get('/api/cue').then(response => {
-      setActive(response.data.active);
-      setCues(response.data.cues);
+      if(response.data === 'disconnected') throwError();
+      else {
+        setActive(response.data.active);
+        setCues(response.data.cues);
+      }
     });
-  }, []);
+  }, [throwError]);
 
   const handleFire = idx => () => {
     axios.post('/api/cue/fire', {nr: cues[idx].nr}).then(response => {
-      setActive(response.data.active);
+      if(response.data === 'disconnected') throwError();
+      else setActive(response.data.active);
     });
   };
 
   const handleGo = () => {
     axios.post('/api/cue/go').then(response => {
-      setActive(response.data.active);
+      if(response.data === 'disconnected') throwError();
+      else setActive(response.data.active);
     });
   };
 

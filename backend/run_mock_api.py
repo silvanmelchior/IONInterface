@@ -4,12 +4,15 @@ from flask import Flask, request
 
 
 API_ENDPOINT = '/api'
-REQUEST_DELAY = 3
+REQUEST_DELAY = 1
+MOCK_DISCONNECT = False
 app = Flask(__name__)
 
 
 @app.route(API_ENDPOINT + '/chan/<int:chan_nr>', methods=['POST'])
 def chan(chan_nr):
+    if MOCK_DISCONNECT:
+        return 'disconnected'
     data = json.loads(request.data.decode('utf-8'))
     print('chan', chan_nr, data['param'], data['val'])
     return 'ok'
@@ -17,6 +20,8 @@ def chan(chan_nr):
 
 @app.route(API_ENDPOINT + '/sub')
 def sub_get():
+    if MOCK_DISCONNECT:
+        return 'disconnected'
     time.sleep(REQUEST_DELAY)
     return json.dumps([
         {'nr': 1, 'name': 'Front'},
@@ -27,6 +32,8 @@ def sub_get():
 
 @app.route(API_ENDPOINT + '/sub/<int:sub_nr>', methods=['POST'])
 def sub_post(sub_nr):
+    if MOCK_DISCONNECT:
+        return 'disconnected'
     data = json.loads(request.data.decode('utf-8'))
     print('sub', sub_nr, data['val'])
     return 'ok'
@@ -34,6 +41,8 @@ def sub_post(sub_nr):
 
 @app.route(API_ENDPOINT + '/cue')
 def cue_get():
+    if MOCK_DISCONNECT:
+        return 'disconnected'
     time.sleep(REQUEST_DELAY)
     return json.dumps({'cues': [
         {'nr': '10', 'name': ''},
@@ -48,6 +57,8 @@ def cue_get():
 
 @app.route(API_ENDPOINT + '/cue/fire', methods=['POST'])
 def cue_fire():
+    if MOCK_DISCONNECT:
+        return 'disconnected'
     time.sleep(REQUEST_DELAY)
     data = json.loads(request.data.decode('utf-8'))
     print('cue fire', data['nr'])
@@ -56,6 +67,8 @@ def cue_fire():
 
 @app.route(API_ENDPOINT + '/cue/go', methods=['POST'])
 def cue_go():
+    if MOCK_DISCONNECT:
+        return 'disconnected'
     time.sleep(REQUEST_DELAY)
     print('cue go')
     return json.dumps({'active': '11.5'})
