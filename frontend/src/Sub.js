@@ -44,14 +44,21 @@ export default function Sub() {
     });
   }, [throwError]);
 
+  const timeoutHandle = React.useRef(null);
+
   const handleSlider = idx => (event, newSlider) => {
-    let vals = [...slider];
-    vals[idx] = newSlider;
-    setSlider(vals);
-    queueCMD(() => {
-      axios.post('/api/sub/' + subs[idx].nr, {val: newSlider})
-        .then(response => {if(response.data === 'disconnected') throwError()});
-    })
+    if(timeoutHandle.current != null) {
+      clearTimeout(timeoutHandle.current);
+    }
+    timeoutHandle.current = setTimeout(() => {
+      let vals = [...slider];
+      vals[idx] = newSlider;
+      setSlider(vals);
+      queueCMD(() => {
+        axios.post('/api/sub/' + subs[idx].nr, {val: newSlider})
+          .then(response => {if(response.data === 'disconnected') throwError()});
+      })
+    }, 1);
   };
 
   if(subs == null) {

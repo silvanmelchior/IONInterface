@@ -37,18 +37,24 @@ export default function Channel() {
   const [chanUsed, setChanUsed] = React.useState(true);
   const [params, setParams] = React.useState(false);
   const queueCMD = useCmdQueue(POLL_INTERVAL_CHANNEL);
+  const timeoutHandle = React.useRef(null);
 
   const handleSlider = idx => (event, newSlider) => {
-    let vals = [...slider];
-    vals[idx] = newSlider;
-    setSlider(vals);
-    setChanUsed(true);
-    if(chan != null) {
-      queueCMD(() => {
-        axios.post('/api/chan/' + chan, {param: PARAM_NAMES[idx], val: newSlider})
-          .then(response => {if(response.data === 'disconnected') throwError()});
-      });
+    if(timeoutHandle.current != null) {
+      clearTimeout(timeoutHandle.current);
     }
+    timeoutHandle.current = setTimeout(() => {
+      let vals = [...slider];
+      vals[idx] = newSlider;
+      setSlider(vals);
+      setChanUsed(true);
+      if(chan != null) {
+        queueCMD(() => {
+          axios.post('/api/chan/' + chan, {param: PARAM_NAMES[idx], val: newSlider})
+            .then(response => {if(response.data === 'disconnected') throwError()});
+        });
+      }
+    }, 1);
   };
 
   const handleOut = event => {
