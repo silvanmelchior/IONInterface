@@ -1,12 +1,14 @@
 import json
 import time
 from flask import Flask, request
+from flask_cors import CORS
 from config import API_ENDPOINT
 
 
 REQUEST_DELAY = 1
 MOCK_DISCONNECT = False
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route(API_ENDPOINT + '/chan/<int:chan_nr>', methods=['POST'])
@@ -77,4 +79,4 @@ def cue_go():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')

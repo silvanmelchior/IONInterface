@@ -1,11 +1,13 @@
 import json
 import socket
 from flask import Flask, request
+from flask_cors import CORS
 from config import API_ENDPOINT, ION_PORT, ION_IP
 from osc import OSCClient
 
 
 app = Flask(__name__)
+CORS(app)
 
 
 def _connect():
