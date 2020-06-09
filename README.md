@@ -17,9 +17,10 @@ pip3 install -r requirements.txt
 Then create the file _config.py_ with the following content (adjust to your setup):
 
 ```
-API_ENDPOINT = '/api'   # API URL, keep this way
-ION_IP = '192.168.1.1'  # adjust to ION IP
-ION_PORT = 3032         # OSC-Port
+API_ENDPOINT = '/api'                   # API URL, keep this way
+ION_IP = '192.168.1.1'                  # adjust to ION IP
+ION_PORT = 3032                         # OSC-Port
+FADE_PARAMS = ['red', 'green', 'blue']  # params to set to 100 for full-cmd
 ```
 
 At last, run the backend with

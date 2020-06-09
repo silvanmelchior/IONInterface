@@ -1,8 +1,9 @@
 import json
+import time
 import socket
 from flask import Flask, request
 from flask_cors import CORS
-from config import API_ENDPOINT, ION_PORT, ION_IP
+from config import API_ENDPOINT, ION_PORT, ION_IP, FADE_PARAMS
 from osc import OSCClient
 
 
@@ -33,6 +34,58 @@ def chan(chan_nr):
 
     client.close()
     return 'ok'
+
+
+def _fade_in_out(chan_nr, fade_in):
+    client = _connect()
+    if client is None:
+        return 'disconnected'
+
+    client.send_msg(f'/eos/chan', chan_nr)
+    msg = ''
+    while True:
+        msg = client.recv_msg('/eos/out/active/chan')[1][0][1]
+        if msg != '':
+            break
+
+    if fade_in:
+        if 'Generic Dimmer' not in msg:
+            for param in FADE_PARAMS:
+                client.send_msg(f'/eos/chan/{chan_nr}/param/{param}', 100)
+
+    val = int(msg.split('[')[1].split(']')[0])
+    if fade_in:
+        while True:
+            val += 10
+            if val >= 100:
+                val = 100
+            client.send_msg(f'/eos/chan/{chan_nr}', val)
+            time.sleep(0.05)
+            if val >= 100:
+                break
+    else:
+        while True:
+            val -= 10
+            if val <= 0:
+                val = 0
+            client.send_msg(f'/eos/chan/{chan_nr}', val)
+            time.sleep(0.05)
+            if val <= 0:
+                break
+
+    time.sleep(0.5)
+    client.close()
+    return 'ok'
+
+
+@app.route(API_ENDPOINT + '/chan/<int:chan_nr>/full', methods=['POST'])
+def chan_full(chan_nr):
+    return _fade_in_out(chan_nr, True)
+
+
+@app.route(API_ENDPOINT + '/chan/<int:chan_nr>/out', methods=['POST'])
+def chan_out(chan_nr):
+    return _fade_in_out(chan_nr, False)
 
 
 @app.route(API_ENDPOINT + '/sub')

@@ -61,7 +61,7 @@ export default function Channel() {
     setSlider(PARAM_NAMES.map(val => 0));
     setChanUsed(true);
     if(chan != null) {
-      axios.post('/api/chan/' + chan, {param: 'intens', val: 0})
+      axios.post('/api/chan/' + chan + '/out')
         .then(response => {if(response.data === 'disconnected') throwError()});
     }
   };
@@ -72,7 +72,7 @@ export default function Channel() {
     setSlider(vals);
     setChanUsed(true);
     if(chan != null) {
-      axios.post('/api/chan/' + chan, {param: 'intens', val: 100})
+      axios.post('/api/chan/' + chan + '/full')
         .then(response => {if(response.data === 'disconnected') throwError()});
     }
   };

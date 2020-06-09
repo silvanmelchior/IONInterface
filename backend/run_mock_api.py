@@ -20,6 +20,24 @@ def chan(chan_nr):
     return 'ok'
 
 
+@app.route(API_ENDPOINT + '/chan/<int:chan_nr>/full', methods=['POST'])
+def chan_full(chan_nr):
+    if MOCK_DISCONNECT:
+        return 'disconnected'
+    data = json.loads(request.data.decode('utf-8'))
+    print('chan full', chan_nr)
+    return 'ok'
+
+
+@app.route(API_ENDPOINT + '/chan/<int:chan_nr>/out', methods=['POST'])
+def chan_out(chan_nr):
+    if MOCK_DISCONNECT:
+        return 'disconnected'
+    data = json.loads(request.data.decode('utf-8'))
+    print('chan out', chan_nr)
+    return 'ok'
+
+
 @app.route(API_ENDPOINT + '/sub')
 def sub_get():
     if MOCK_DISCONNECT:
