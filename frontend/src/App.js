@@ -1,10 +1,11 @@
 import React from 'react';
-import { AppBar, Snackbar, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Snackbar, Toolbar, Typography, IconButton } from '@material-ui/core';
 import { BottomNavigation, BottomNavigationAction, Container } from '@material-ui/core';
-import { FiberManualRecord, GroupWork, PlayArrow } from '@material-ui/icons';
+import { FiberManualRecord, GroupWork, PlayArrow, Settings as SettingsBtn } from '@material-ui/icons';
 import Channel from './Channel';
 import Sub from './Sub';
 import Cue from './Cue';
+import Settings from './Settings';
 import ErrorContext from './Error';
 import { makeStyles } from '@material-ui/core';
 
@@ -22,11 +23,15 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: theme.palette.error.main,
       color: 'white'
     }
+  },
+  Title: {
+    flexGrow: 1,
   }
 }));
 
 export default function App() {
 
+  const [settings, setSettings] = React.useState(false);
   const [page, setPage] = React.useState('chan');
   const [error, setError] = React.useState(false);
   const classes = useStyles();
@@ -35,14 +40,18 @@ export default function App() {
     <>
       <AppBar position="sticky">
         <Toolbar>
-          <Typography variant="h6">
+          <Typography variant="h6" className={classes.Title}>
             ETC ION Web Interface
           </Typography>
+          <IconButton color="inherit" onClick={() => setSettings(!settings)}>
+            <SettingsBtn />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <ErrorContext.Provider value={() => setError(true)}>
         <Container maxWidth="xs" className={classes.Container}>
           {
+            settings        ? <Settings onDone={() => setSettings(false)} /> :
             page === 'chan' ? <Channel/> :
             page === 'sub'  ? <Sub/> :
                               <Cue/>

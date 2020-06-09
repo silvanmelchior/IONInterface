@@ -94,5 +94,21 @@ def cue_go():
     return json.dumps({'active': '11.5'})
 
 
+@app.route(API_ENDPOINT + '/setting', methods=['GET', 'POST'])
+def settings():
+    if MOCK_DISCONNECT:
+        return 'disconnected'
+    if request.method == 'POST':
+        data = json.loads(request.data.decode('utf-8'))
+        print('settings set', data)
+        return 'ok'
+    else:
+        time.sleep(REQUEST_DELAY)
+        return json.dumps({
+            'ion-ip': '192.168.1.1',
+            'ion-port': 1234
+        })
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
