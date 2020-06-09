@@ -1,9 +1,10 @@
+import os
 import json
 import time
 import socket
 from flask import Flask, request
 from flask_cors import CORS
-from config import API_ENDPOINT, ION_PORT, ION_IP, FADE_PARAMS
+from config import API_ENDPOINT, FADE_PARAMS
 from osc import OSCClient
 
 
@@ -11,8 +12,15 @@ app = Flask(__name__)
 CORS(app)
 
 
+def _read_settings():
+    path = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(path, 'config.json')) as f:
+        return json.load(f)
+
+
 def _connect():
-    client = OSCClient(ION_IP, ION_PORT)
+    settings = _read_settings()
+    client = OSCClient(settings['ion-ip'], settings['ion-port'])
     try:
         client.connect()
     except (socket.timeout, TimeoutError, ConnectionRefusedError):
@@ -177,6 +185,18 @@ def cue_go():
 
     client.close()
     return json.dumps({'active': pending})
+
+
+@app.route(API_ENDPOINT + '/setting', methods=['GET', 'POST'])
+def settings():
+    if request.method == 'POST':
+        data = json.loads(request.data.decode('utf-8'))
+        path = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(path, 'config.json'), 'w') as f:
+            json.dump(data, f)
+        return 'ok'
+    else:
+        return json.dumps(_read_settings())
 
 
 if __name__ == "__main__":

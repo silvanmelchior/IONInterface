@@ -1,4 +1,5 @@
 /config.py
+/config.json
 /run.sh
 /venv
 __pycache__

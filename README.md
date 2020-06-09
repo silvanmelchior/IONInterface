@@ -18,9 +18,16 @@ Then create the file _config.py_ with the following content (adjust to your setu
 
 ```
 API_ENDPOINT = '/api'                   # API URL, keep this way
-ION_IP = '192.168.1.1'                  # adjust to ION IP
-ION_PORT = 3032                         # OSC-Port
 FADE_PARAMS = ['red', 'green', 'blue']  # params to set to 100 for full-cmd
+```
+
+Also create the file _config.json_ with the following content (adjust to your setup):
+
+```
+{
+  "ion-ip": "192.168.1.1"                # adjust to ION IP
+  "ion-port": 3032                       # OSC-Port
+}
 ```
 
 At last, run the backend with
