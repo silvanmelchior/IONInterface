@@ -24,7 +24,6 @@ def chan(chan_nr):
 def chan_full(chan_nr):
     if MOCK_DISCONNECT:
         return 'disconnected'
-    data = json.loads(request.data.decode('utf-8'))
     print('chan full', chan_nr)
     return 'ok'
 
@@ -33,7 +32,6 @@ def chan_full(chan_nr):
 def chan_out(chan_nr):
     if MOCK_DISCONNECT:
         return 'disconnected'
-    data = json.loads(request.data.decode('utf-8'))
     print('chan out', chan_nr)
     return 'ok'
 
