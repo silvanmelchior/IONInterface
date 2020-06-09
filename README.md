@@ -26,7 +26,7 @@ Also create the file _config.json_ with the following content (adjust to your se
 ```
 {
   "ion-ip": "192.168.1.1"                # adjust to ION IP
-  "ion-port": 3032                       # OSC-Port
+  "ion-port": "3032"                       # OSC-Port
 }
 ```
 

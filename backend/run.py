@@ -20,7 +20,7 @@ def _read_settings():
 
 def _connect():
     settings = _read_settings()
-    client = OSCClient(settings['ion-ip'], settings['ion-port'])
+    client = OSCClient(settings['ion-ip'], int(settings['ion-port']))
     try:
         client.connect()
     except (socket.timeout, TimeoutError, ConnectionRefusedError):
