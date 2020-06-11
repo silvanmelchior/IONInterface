@@ -58,7 +58,7 @@ At last, run the frontend with
 npm run start
 ```
 
-Visit **http://<your-ip>>:3000** if it did not open automatically. You should see the channel screen.
+Visit **http://your-ip:3000** if it did not open automatically. You should see the channel screen.
 
 ## Deployment
 
